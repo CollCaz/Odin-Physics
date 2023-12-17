@@ -3,15 +3,26 @@ package physics
 import "core:fmt"
 import la "core:math/linalg"
 
-gravity := la.Vector2f32{0, 0.0981}
 
 Object :: struct {
-	position: la.Vector2f32,
-	velocity: la.Vector2f32,
-	force:    la.Vector2f32,
-	mass:     f32,
+	positionCurrent: la.Vector2f32,
+	oldPosition:     la.Vector2f32,
+	accelation:      la.Vector2f32,
 }
 
+update :: proc(o: ^Object, dt: f32) {
+	velocity := o.positionCurrent - o.oldPosition
+	o.oldPosition = o.positionCurrent
+
+	// Verlet Integration
+	o.positionCurrent = o.positionCurrent + velocity + o.accelation * dt * dt
+
+	o.accelation = {}
+}
+
+accelerate :: proc(o: ^Object, acc: la.Vector2f32) {
+	o.accelation += acc
+}
 
 objects: [dynamic]Object
 
@@ -27,14 +38,13 @@ removeObject :: proc(o: ^Object) {
 	}
 }
 
-step :: proc(dt: f32) {
-	for &o, _ in objects {
-		fmt.println(o)
-		// set force then make sure it's reset at the end of the step
-		o.force += o.mass * gravity
-		defer o.force = la.Vector2f32{0, 0}
+gravity :: la.Vector2f32{0.0, 100.0}
 
-		o.velocity += o.force / o.mass * dt
-		o.position += o.velocity
+
+step :: proc(dt: f32) {
+	for &o in objects {
+		accelerate(&o, gravity)
+
+		update(&o, dt)
 	}
 }
