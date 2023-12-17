@@ -12,10 +12,8 @@ main :: proc() {
 	defer fmt.println("bye!")
 
 	o := p.Object {
-		position = vec,
-		velocity = vec2,
-		force    = vec,
-		mass     = 20.0,
+		positionCurrent = vec,
+		oldPosition     = vec,
 	}
 
 	fmt.println(p.objects)
@@ -29,7 +27,7 @@ main :: proc() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.BLACK)
 
-		rl.DrawCircle((i32)(ob.position.x), (i32)(ob.position.y), 30, rl.WHITE)
+		rl.DrawCircle((i32)(ob.positionCurrent.x), (i32)(ob.positionCurrent.y), 3, rl.WHITE)
 
 		p.step(rl.GetFrameTime())
 
