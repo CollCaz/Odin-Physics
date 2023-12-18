@@ -6,28 +6,39 @@ import la "core:math/linalg"
 import rl "vendor:raylib"
 
 main :: proc() {
-	vec := la.Vector2f32{370, 20}
-	vec2 := la.Vector2f32{0, 0}
+	vec := la.Vector2f32{40, 2}
+	vec2 := la.Vector2f32{30, 0}
 
 	defer fmt.println("bye!")
 
-	o := p.Object {
+	ob1 := p.Object {
 		positionCurrent = vec,
 		oldPosition     = vec,
 	}
 
+	ob2 := p.Object {
+		positionCurrent = vec2,
+		oldPosition     = vec2,
+	}
+
 	fmt.println(p.objects)
-	p.addObject(&o)
+	p.addObject(&ob1)
+	p.addObject(&ob2)
 
-	ob := &p.objects[0]
+	o1 := &p.objects[0]
+	o2 := &p.objects[1]
 
-	rl.InitWindow(800, 700, "AA")
+	rl.InitWindow(800, 400, "AA")
+	rl.SetTargetFPS(60)
 
 	for (!rl.WindowShouldClose()) {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.BLACK)
 
-		rl.DrawCircle((i32)(ob.positionCurrent.x), (i32)(ob.positionCurrent.y), 3, rl.WHITE)
+		rl.DrawCircle((i32)(p.constraint.x), (i32)(p.constraint.y), p.radius, rl.GRAY)
+
+		rl.DrawCircle((i32)(o1.positionCurrent.x), (i32)(o1.positionCurrent.y), 30, rl.WHITE)
+		//rl.DrawCircle((i32)(o2.positionCurrent.x), (i32)(o2.positionCurrent.y), 5, rl.WHITE)
 
 		p.step(rl.GetFrameTime())
 

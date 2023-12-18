@@ -38,13 +38,33 @@ removeObject :: proc(o: ^Object) {
 	}
 }
 
-gravity :: la.Vector2f32{0.0, 100.0}
+gravity := la.Vector2f32{0.0, 100.0}
 
 
 step :: proc(dt: f32) {
 	for &o in objects {
 		accelerate(&o, gravity)
-
+		applyConstraint(&o)
 		update(&o, dt)
+		fmt.println(o.positionCurrent)
+	}
+}
+
+constraint := la.Vector2f32{400, 0}
+radius: f32 = 400.0
+
+applyConstraint :: proc(o: ^Object) {
+	vec_to_obj := o.positionCurrent - constraint
+	dist := la.distance(o.positionCurrent, constraint)
+
+	if (dist > radius - 30) {
+		n := vec_to_obj / dist
+		fmt.println("n: ", n)
+		o.positionCurrent = constraint + n * (radius - 30)
+		//fmt.println(o.positionCurrent - o.oldPosition)
+		//if ((o.positionCurrent - o.oldPosition) != 0) {
+		//fmt.println("AAAAAAAAAA")
+		accelerate(o, (o.positionCurrent - o.oldPosition) * -9)
+		//}
 	}
 }
