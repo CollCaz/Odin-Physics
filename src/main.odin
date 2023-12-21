@@ -6,7 +6,7 @@ import la "core:math/linalg"
 import rl "vendor:raylib"
 
 main :: proc() {
-	vec := la.Vector2f32{40, 2}
+	vec := la.Vector2f32{50, 0}
 	vec2 := la.Vector2f32{30, 0}
 
 	defer fmt.println("bye!")
@@ -38,7 +38,6 @@ main :: proc() {
 		rl.DrawCircle((i32)(p.constraint.x), (i32)(p.constraint.y), p.radius, rl.GRAY)
 
 		rl.DrawCircle((i32)(o1.positionCurrent.x), (i32)(o1.positionCurrent.y), 30, rl.WHITE)
-		//rl.DrawCircle((i32)(o2.positionCurrent.x), (i32)(o2.positionCurrent.y), 5, rl.WHITE)
 
 		p.step(rl.GetFrameTime())
 

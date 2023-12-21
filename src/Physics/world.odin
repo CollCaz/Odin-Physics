@@ -8,6 +8,7 @@ Object :: struct {
 	positionCurrent: la.Vector2f32,
 	oldPosition:     la.Vector2f32,
 	accelation:      la.Vector2f32,
+	friction:        la.Vector2f32,
 }
 
 update :: proc(o: ^Object, dt: f32) {
@@ -15,9 +16,11 @@ update :: proc(o: ^Object, dt: f32) {
 	o.oldPosition = o.positionCurrent
 
 	// Verlet Integration
-	o.positionCurrent = o.positionCurrent + velocity + o.accelation * dt * dt
+	o.positionCurrent =
+		o.positionCurrent + velocity - (velocity * o.friction) + o.accelation * dt * dt
 
 	o.accelation = {}
+	o.friction = 0
 }
 
 accelerate :: proc(o: ^Object, acc: la.Vector2f32) {
@@ -45,8 +48,8 @@ step :: proc(dt: f32) {
 	for &o in objects {
 		accelerate(&o, gravity)
 		applyConstraint(&o)
+		//o.friction += 0.03
 		update(&o, dt)
-		fmt.println(o.positionCurrent)
 	}
 }
 
@@ -59,12 +62,10 @@ applyConstraint :: proc(o: ^Object) {
 
 	if (dist > radius - 30) {
 		n := vec_to_obj / dist
-		fmt.println("n: ", n)
-		o.positionCurrent = constraint + n * (radius - 30)
-		//fmt.println(o.positionCurrent - o.oldPosition)
-		//if ((o.positionCurrent - o.oldPosition) != 0) {
-		//fmt.println("AAAAAAAAAA")
-		accelerate(o, (o.positionCurrent - o.oldPosition) * -9)
-		//}
+
+		o.positionCurrent = constraint + (n) * (radius - 30)
+		fmt.println(vec_to_obj)
+
+		o.friction += 0.002
 	}
 }
