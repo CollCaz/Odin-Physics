@@ -23,10 +23,10 @@ main :: proc() {
 
 	fmt.println(p.objects)
 	p.addObject(&ob1)
-	p.addObject(&ob2)
+	//p.addObject(&ob2)
 
 	o1 := &p.objects[0]
-	o2 := &p.objects[1]
+	//o2 := &p.objects[1]
 
 	rl.InitWindow(800, 400, "AA")
 	rl.SetTargetFPS(60)
