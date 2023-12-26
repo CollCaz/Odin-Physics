@@ -41,14 +41,13 @@ removeObject :: proc(o: ^Object) {
 	}
 }
 
-gravity := la.Vector2f32{0.0, 100.0}
+gravity := la.Vector2f32{0.0, 1000.0}
 
 
 step :: proc(dt: f32) {
 	for &o in objects {
 		accelerate(&o, gravity)
 		applyConstraint(&o)
-		//o.friction += 0.03
 		update(&o, dt)
 	}
 }
@@ -64,8 +63,7 @@ applyConstraint :: proc(o: ^Object) {
 		n := vec_to_obj / dist
 
 		o.positionCurrent = constraint + (n) * (radius - 30)
-		fmt.println(vec_to_obj)
 
-		o.friction += 0.002
+		o.friction += 0.008
 	}
 }
