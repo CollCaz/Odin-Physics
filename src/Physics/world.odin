@@ -64,6 +64,6 @@ applyConstraint :: proc(o: ^Object) {
 
 		o.positionCurrent = constraint + (n) * (radius - 30)
 
-		o.friction += 0.003
+		o.friction += 0.008
 	}
 }
