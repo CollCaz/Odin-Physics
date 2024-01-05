@@ -2,10 +2,12 @@ package physics
 
 import "core:fmt"
 import la "core:math/linalg"
+import rl "vendor:raylib"
 
 
 Object :: struct {
 	radius:          f32,
+	color:           rl.Color,
 	positionCurrent: la.Vector2f32,
 	oldPosition:     la.Vector2f32,
 	accelation:      la.Vector2f32,
@@ -48,8 +50,29 @@ gravity := la.Vector2f32{0.0, 1000.0}
 step :: proc(dt: f32) {
 	for &o in objects {
 		accelerate(&o, gravity)
+		solveCollisions(&o, dt)
 		applyConstraint(&o)
 		update(&o, dt)
+	}
+}
+
+// TODO:
+// O(n^2) algo for testing
+// Change later
+solveCollisions :: proc(o1: ^Object, dt: f32) {
+	for &o in objects {
+		if o1^ != o {
+			sumOfRad := o1.radius + o.radius
+			collisionAxis := o1.positionCurrent - o.positionCurrent
+			dist := la.length(collisionAxis)
+			overlap := (sumOfRad - dist)
+			colVec := (collisionAxis / dist) * overlap
+			if dist < sumOfRad {
+				fmt.println("Collision")
+				o.positionCurrent -= colVec / 2
+				o1.positionCurrent += colVec / 2
+			}
+		}
 	}
 }
 
@@ -64,8 +87,8 @@ applyConstraint :: proc(o: ^Object) {
 		n := vec_to_obj / dist
 
 		o.positionCurrent = constraint + (n) * (radius - o.radius)
-		fmt.println(vec_to_obj)
+		//fmt.println(vec_to_obj)
 
-		o.friction += 0.004
+		//o.friction += 0.02
 	}
 }
