@@ -5,6 +5,7 @@ import la "core:math/linalg"
 
 
 Object :: struct {
+	radius:          f32,
 	positionCurrent: la.Vector2f32,
 	oldPosition:     la.Vector2f32,
 	accelation:      la.Vector2f32,
@@ -59,10 +60,10 @@ applyConstraint :: proc(o: ^Object) {
 	vec_to_obj := o.positionCurrent - constraint
 	dist := la.distance(o.positionCurrent, constraint)
 
-	if (dist > radius - 30) {
+	if (dist > radius - o.radius) {
 		n := vec_to_obj / dist
 
-		o.positionCurrent = constraint + (n) * (radius - 30)
+		o.positionCurrent = constraint + (n) * (radius - o.radius)
 		fmt.println(vec_to_obj)
 
 		o.friction += 0.004
